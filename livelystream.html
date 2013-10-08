@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html>
+	<title></title>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>Pear - Get Started</title>
+	</head>
+	<body>
+		<script src="jquery.js"></script>
+		<script src="jquery-ui.js"></script>
+		<link rel="stylesheet" href="jquery-ui-1.9.2.custom/css/ui-lightness/jquery-ui.custom.css" />
+		<link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/le-frog/jquery-ui.css" />        
+    	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.9.2/jquery.mobile-1.9.2.min.css" />
+		
+		
+		
+		<div class="wrap2">
+			<div id="top_bar" onclick="location.href='http://tryglancetk.ipage.com/';" style="cursor:pointer;">
+				<img id="logo_white" border="0" src="newlogo_white.png" alt="hmm... the logo should be here"> Pear [beta]
+			</div>
+		
+			<div class="fright2">
+				<div id="sub_form2" style="margin-left:10px">
+					<!--<form name = "filter_input">-->
+					<div style="font-size:28pt;">Filter Posts</div>
+					Filter by Location:
+					<br>
+					<input type="text" name="locationInput" id="locationInput">
+					<br>
+					<br>
+					Filter with Tags:
+					<br>
+					<textarea id="tagsInput" name="tagsInput" cols="25" rows="5" onfocus="this.value=''">Add hashtags here.  To clear the filter, just hit submit.</textarea>
+					<br>
+					<input type="button" value="Filter" onclick=filterByTag()>
+					</input>
+					<!-- </form> -->
+				</div>
+				<br>
+				<div id="sub_form2" style="margin-left:10px">
+	    		<form name="input" onsubmit="return validateForm()" action="submit_to_database.php" method="post">
+	    		<div style="font-size:28pt;">Submit Posts</div>
+	    		Name: <input type="text" name="name">
+	    		<br>
+	    		Sex: <input type="radio" name="sex" value="male"> Male
+	         	<input type="radio" name="sex" value="female"> Female
+	    		<br>
+	    		Location: <input type="text" name="location">
+	    		<br>
+	    		Date: <input type="text" name="date" id="datepicker"/>
+	    		<br>
+	    		Encounter:
+	    		<br>
+	    		<textarea name="description" cols="25" rows="5" onclick="this.value=''">Describe your encounter here...</textarea>
+				<br>
+				Tags:
+				<br>
+				<textarea name="tags" cols="25" rows="5" onclick="this.value=''">Add hashtags here</textarea>
+	    		<br>
+	    		Info:
+	    		<br>
+	    		<select name="info_type">
+	    			<option value="email">E-mail</option>
+	    			<option value="facebook" selected>Facebook</option>
+	    			<option value="website">Website</option>
+	    			<option value="other">Other</option>
+	    		</select>
+	    		<br>
+	    		<textarea name="info" cols="25" rows="5">Fill in what you selected above (facebook profile, email, etc.) INCLUDE "http://" AT THE BEGINNING IF FACEBOOK OR WEBSITE!</textarea>
+	    		<br>
+	    		<input type="submit" value="Submit"? />  
+	    	</form>
+	    </div>
+				
+			</div>
+			<div class="fleft2">
+				<div id="head_logo">
+					<center>
+						Pear
+					</center>
+				</div>
+				<div class="loadPostsButton" id="LoadButton" style="width:90%; margin-left:auto; margin-right:auto;" onclick=loadLatestPosts() ></div>
+				<div id="mainDiv" style="width:90%; margin-left:auto; margin-right:auto; background-color:rgba(255,250,250,0.8);"></div>
+			</div>
+		</div>
+	</body>
+
+	<!--defining the basic encounter card format -->
+	<style>
+		body
+		{
+			margin:0;
+			padding:0;
+			background-image:url('tree_bark.png');
+			background-position:left top;
+		}
+		
+		@font-face {
+			font-family: berlin;
+			src: url(test_font.ttf);
+		}
+
+		.encounterCardDiv{
+			position: relative;
+			width: 500px;
+			background-color:rgba(255,250,250,1.0);
+			/*border: 1px solid #767171;*/
+			word-wrap: break-word;
+			color: #404040;
+			margin-bottom: 20px;
+			/*EMERGENCY. ALL ALIGNMENT TAGS DO NOT WORK*/
+			/*WELL SHIT. WE'RE SINKING CAPTAIN, WE'RE SINKINGGGGGGG *glub glub glub */
+		}
+
+		.loadPostsButton {
+			width: 500px;
+			background-color: green;
+			color: white;
+			margin-top: 20px;
+			margin-bottom: 20px;
+			cursor: pointer;
+			font-family: berlin;
+		}
+
+		#sub_form2 {
+			font-family: berlin;
+			color: #339900;
+			margin-top: 20px;
+			margin-left: 20px;
+		}
+
+		#head_logo {
+			background-color:rgba(255,250,250,0.8);
+			margin-top: 20px !important;
+			margin: 0 auto;
+			width: 50%;
+			height: 200px;
+			border: 2px solid #339900;
+			font-size: 94px;
+			font-family: berlin;
+		}
+
+		#top_bar {
+			color: white;
+			font-family: berlin;
+			background-color: #339900;
+			font-size: 36px;
+			width:100%;
+			height:48px;
+		}
+
+		#logo_white {
+			margin-left: 10px;
+			width: 30px; /* you can use % */
+			height: auto;
+		}
+
+		.wrap2 {
+			width: screen .width;
+			min-width: 1024px;
+			height: screen .height;
+			right:0;
+			left:0;
+		}
+		
+		.wrap3
+		{
+			height: auto;
+			background: white;
+			overflow-y: auto;
+		}
+
+		.fleft2 {
+			float: right;
+			height: auto;
+			min-height: 800px;
+		    background-color:rgba(255,250,250,0.8);
+			width: 50%;
+			color: #339900;		
+		}
+
+		.fright2 {
+			color: black;
+			float: right;
+			background-color:rgba(255,250,250,0.8);
+			height:auto;
+			height:100%;
+			min-height: 800px;
+			width: 30%;
+			margin-right:10%
+		}
+
+		.encounterCard {
+			position:relative;
+			width: 100%
+			background:white;
+			border: 1px solid #339900;
+			word-wrap: break-word;
+			color: #339900;
+			margin-bottom: 10px;
+		}
+
+		.encounterText {
+			margin-top:-20px;
+			margin-left: 10px;
+			color: #000000;
+		}
+
+		.encounterTags {
+			margin-left: 10px;
+			margin-bottom:10px;
+		}
+
+		.encounterPicture {
+			float:left;
+			margin-top:10px;
+			margin-left:10px;
+			margin-right:4px;
+			width: 10%;
+			display: inline-block;
+		}
+
+		.encounterName {
+			margin-top:10px;
+			overflow-x: auto;
+			color: #000000;
+		}
+		
+		#encounterLocation {
+			margin-top:0px;
+			color:#767171;
+			font-size:10pt;
+		}
+		
+		#encounterDate {
+			margin-top:-13px;
+			color:#767171;
+			font-size:10pt;
+		}
+
+		.heart {
+			position:absolute;
+ 			top:10px;
+ 			right:10px;
+			cursor: pointer;
+		}
+		
+	</style>
+
+	<!--Scrolling Functions-->
+	<script>
+		/**
+		 * WARNING:
+		 * The edits I'm about to make are going to MAJORLY screw with just about everything we have written down here.  I think.
+		 * Don't be mad.
+		 *
+		 * Remember the bunnies
+		 * 
+		 */
+
+		var counter = 0;
+		var bottomChild;
+		var topChild;
+		var latestId;
+		var latestPostId;
+		var postToAppendDownTo = 0;
+		var lowestDisplayedPost = 0;
+		var canAppend = true;
+
+		var latestPostedIndex;
+		var lowestPostedIndex;
+		//index, in the array, of the post id that is displayed at the bottom of the page
+
+		var indexToAppendTo;
+		//index, in the same array, to append to
+		var queryPostIds;
+
+		var tagArray = new Array();
+		var tagString;
+
+		var loadingPosts = false;
+		//whether or not we're loading new posts
+		
+		function validateForm(){
+		
+		var a=document.forms["input"]["name"].value;
+		var b=document.forms["input"]["location"].value;
+		var c=document.forms["input"]["date"].value;
+		var d=document.forms["input"]["description"].value;
+		var e=document.forms["input"]["tags"].value;
+		var f=document.forms["input"]["info"].value;
+
+		if (a==null || a=="" || b==null || b=="" || c==null || c=="" || d==null || d=="" || e==null || e=="" || f==null || f=="")
+  			{
+  				
+  				alert("You must complete this form.");
+ 				return false;
+ 				
+  			}
+		}
+
+		function filterByTag() {
+			tagString = document.getElementById("tagsInput").value;
+			tagString = tagString.replace(" ", "");
+			if ( typeof (Storage) !== "undefined") {
+				//we have sessionStorage support!  Huzzah!
+				sessionStorage.stringOfTags = tagString;
+				sessionStorage.locationString = document.getElementById("locationInput").value;
+			}
+			location.reload();
+		}
+
+		function appendNewEncounter() {
+			if (lowestPostedIndex > indexToAppendTo) {
+				$.post("post3.php", {
+					'postIdToFetch' : queryPostIds[lowestPostedIndex - 1]
+				}, function(data) {
+					var postData = $.parseJSON(data);
+
+					var encounterCard = document.createElement("div");
+					encounterCard.className = "encounterCard";
+					
+					var encounterPicture = document.createElement("div");
+					encounterPicture.className = "encounterPicture";
+					if(postData["sex"]=="female")
+					{
+						encounterPicture.innerHTML = "<img src='girl.jpg' width='100%'>";
+					}
+					else
+					{
+						encounterPicture.innerHTML = postData["sex"];
+						encounterPicture.innerHTML = "<img src='boy.jpg' width='100%'>";
+					}
+
+					var encounterName = document.createElement("div");
+					encounterName.className = "encounterName";
+					encounterName.innerHTML = "<b>" + postData["name"] + "</b>" + "<p id='encounterLocation'>"+postData["location"]+"</p>" + "<p id='encounterDate'>" + postData["date"] + "</p>" + "<br>";
+					
+					var encounterHeart = document.createElement("div");
+					encounterHeart.className = "heart";
+					
+					var dialog = document.createElement("div");
+						dialog.id = "dialog";
+						dialog.title = postData["infotype"];
+						dialog.innerHTML = "<a href=" + postData["info"] + ">" + postData["info"] + "</a>";
+					
+					encounterHeart.onclick = function()
+					{
+						encounterHeart.appendChild(dialog);
+						$(dialog).dialog({autoOpen : false});
+						$(dialog).dialog("open");
+					}
+					encounterHeart.innerHTML = "<img id='heart' border='0' height='30px' src='heart.png' alt='heart''>";
+
+					var encounterText = document.createElement("div");
+					encounterText.className = "encounterText";
+					encounterText.innerHTML = postData["description"];
+
+					var encounterTags = document.createElement("div");
+					encounterTags.className = "encounterTags";
+					encounterTags.innerHTML = postData["tags"];
+
+					mainDiv.appendChild(encounterCard);
+					encounterCard.appendChild(encounterPicture);
+					encounterCard.appendChild(encounterName);
+					encounterCard.appendChild(encounterHeart);
+					encounterCard.appendChild(encounterText);
+					encounterCard.appendChild(encounterTags);
+
+					lowestPostedIndex--;
+					appendNewEncounter();
+				});
+
+			} else {
+				canAppend = true;
+			}
+		}
+
+		function prependNewEncounters() {
+			if (queryPostIds.length > latestPostedIndex + 1) {
+				$.post("post3.php", {
+					'postIdToFetch' : queryPostIds[latestPostedIndex + 1]
+				}, function(data) {
+					var postData = $.parseJSON(data);
+					var encounterCard = document.createElement("div");
+					encounterCard.className = "encounterCard";
+
+					var encounterPicture = document.createElement("div");
+					encounterPicture.className = "encounterPicture";
+					if(postData["sex"]=="female")
+					{
+						encounterPicture.innerHTML = "<img src='girl.jpg' width='100%'>";
+					}
+					else
+					{
+						encounterPicture.innerHTML = postData["sex"];
+						encounterPicture.innerHTML = "<img src='boy.jpg' width='100%'>";
+					}
+
+					
+					var encounterName = document.createElement("div");
+					encounterName.className = "encounterName";
+					encounterName.innerHTML = "<b>" + postData["name"] + "</b>" + "<p id='encounterLocation'>"+postData["location"]+"</p>" + "<p id='encounterDate'>" + postData["date"] + "</p>" + "<br>";				
+					
+					var encounterHeart = document.createElement("div");
+					encounterHeart.className = "heart";
+					
+					var heartText = document.createElement("div");
+					heartText.id = String(postData["id"]);
+					heartText.value = postData["info"] + ">" + postData["info"];
+					
+					var dialog = document.createElement("div");
+						dialog.id = "dialog";
+						dialog.title = postData["infotype"];
+						dialog.innerHTML = "<a href=" + postData["info"] + ">" + postData["info"] + "</a>";
+						$("#dialog").dialog({autoOpen : false});
+						$("#dialog").dialog("open");
+					
+					encounterHeart.onclick = function()
+					{
+						encounterHeart.appendChild(dialog);
+					}
+					encounterHeart.innerHTML = "<img id='heart' border='0' height='30px' src='heart.png' alt='heart''>";
+
+					var encounterText = document.createElement("div");
+					encounterText.className = "encounterText";
+					encounterText.innerHTML = postData["description"];
+
+					var encounterTags = document.createElement("div");
+					encounterTags.className = "encounterTags";
+					encounterTags.innerHTML = postData["tags"];
+
+					$("#mainDiv").prepend(encounterCard);
+					encounterCard.appendChild(encounterPicture);
+					encounterCard.appendChild(encounterName);
+					encounterCard.appendChild(encounterHeart);
+					encounterCard.appendChild(encounterText);
+					encounterCard.appendChild(encounterTags);
+					
+					latestPostedIndex++;
+					prependNewEncounters();
+				});
+
+			} else {
+				loadingPosts = false;
+			}
+		}
+
+		function sendAlert(infotype, info) {
+			var dialog = document.createElement("div");
+			dialog.className = "dialog";
+			dialog.title = infotype;
+			dialog.innerHTML = "<a href = " + info + "></a>";
+			$("#dialog").dialog("open");
+		}
+
+
+		$(function() {
+   		 $( "#datepicker" ).datepicker({ dateFormat: "M dd" });
+  			});
+  					
+		$(document).ready(function() {
+			tagString = sessionStorage.stringOfTags;
+			if (tagString == undefined) {
+				tagString = " ";
+			}
+			locationTag = sessionStorage.locationString;
+			if (locationTag == undefined) {
+				locationTag = " ";
+			}
+			tagArray = tagString.split("#");
+			tagArray.shift();
+			$.post("QueryEncounters.php", {
+				'tags' : tagArray, //i shouldn't really be able to pass an array, but...
+				'location' : locationTag
+			}, function(data) {
+				queryPostIds = $.parseJSON(data);
+				lowestPostedIndex = queryPostIds.length;
+				indexToAppendTo = lowestPostedIndex - 10;
+				if (indexToAppendTo < 0) {
+					indexToAppendTo = 0
+				}
+				appendNewEncounter();
+				latestPostedIndex = queryPostIds.length - 1;
+			});
+		});
+
+		$(window).scroll(function() {
+			if ($(window).scrollTop() + $(window).height() > $(document).height() - 300)
+			// ^ for some reason this acts differently if you move slow or fast
+			{
+
+				if (canAppend) {
+					if (indexToAppendTo > 3)//the 20 was 3
+					{
+						indexToAppendTo -= 3;
+						//the 20 was 3
+					} else {
+						indexToAppendTo = 0;
+					}
+					appendNewEncounter();
+					canAppend = false;
+				}
+			}
+
+		});
+
+		function checkLatestPostID() {
+			$.post("QueryEncounters.php", {
+				'tags' : tagArray,
+				'location' : locationTag
+			}, function(data) {
+				queryPostIds = $.parseJSON(data);
+				if (queryPostIds.length > latestPostedIndex + 1 && !loadingPosts) {
+					document.getElementById("LoadButton").innerHTML = " " + String(queryPostIds.length - latestPostedIndex - 1) + " New Post(s)";
+					document.getElementById("LoadButton").style.height = '20px';
+				} else {
+					document.getElementById("LoadButton").innerHTML = "";
+					document.getElementById("LoadButton").style.height = '0px';
+				}
+			});
+		}
+
+		function loadLatestPosts() {
+			document.getElementById("LoadButton").innerHTML = "";
+			document.getElementById("LoadButton").style.height = '0px';
+			prependNewEncounters();
+			loadingPosts = true;
+		}
+
+		setInterval(checkLatestPostID, 3000);
+	</script>
+
+</html>
